@@ -9,19 +9,32 @@ const createBook = async (req: Request, res: Response) => {
         res.send({
             success: true,
             message: "Book created successfully",
-            data
+            data 
         })
-    } catch (error) {
-        res.send({
-            "message": "Validation failed",
-            "success": false,
-            "error": error
+    } catch (error : any) {
+        res.status(500).send({
+            message: "Validation failed",
+            success: false,
+            error: {
+                name : error.name,
+                errors : error.errors
+            }
         })
     }
 }
 const allBook = async (req: Request, res: Response) => {
     try {
-        const data = await Book.find();
+        let data;
+        const filter = req.query.filter as string || "";
+        const sortBy = req.query.sortBy as string || "createdAt";
+        const sortParams = req.query.sort?.toString().toLowerCase();
+        const sort = sortParams === "desc" ? -1 : sortParams === "asc" ? 1 : "desc";
+        const limit = parseInt(req.query.limit as string) || 10;
+        const query = filter ? { genre: filter } : {};
+
+
+        data = await Book.find(query).sort({ [sortBy]: sort }).limit(limit);
+
         res.send({
             success: true,
             message: "Books retrieved successfully",
@@ -55,9 +68,50 @@ const singleBook = async (req: Request, res: Response) => {
 
 
 }
+const updateBook = async (req: Request, res: Response) => {
+    try {
+        const body = req.body;
+        const id = req.params.bookId;
+        const data = await Book.findByIdAndUpdate(id, body, { new: true });
+
+
+        res.send({
+            success: true,
+            message: "Book updated successfully",
+            data
+        })
+    } catch (error) {
+        res.send({
+            "message": "Book updated Validation failed",
+            "success": false,
+            "error": error
+        })
+    }
+
+
+}
+const deleteBook = async (req: Request, res: Response) => {
+    try {
+        const id = req.params.bookId;
+        await Book.findByIdAndDelete(id);
+        res.send({
+            success: true,
+            message: "Book deleted successfully",
+            data: null
+        });
+    } catch (error) {
+        res.send({
+            "message": "Book updated Validation failed",
+            "success": false,
+            "error": error
+        })
+    }
+}
 
 export {
     createBook,
     allBook,
-    singleBook
+    singleBook,
+    updateBook,
+    deleteBook
 }
