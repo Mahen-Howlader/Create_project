@@ -9,19 +9,23 @@ const createBook = async (req: Request, res: Response) => {
         res.send({
             success: true,
             message: "Book created successfully",
-            data 
+            data
         })
-    } catch (error : any) {
-        res.status(500).send({
+    } catch (error: any) {
+        // General fallback
+        res.status(500).json({
             message: "Validation failed",
             success: false,
             error: {
-                name : error.name,
-                errors : error.errors
-            }
-        })
+                name: error.name,
+                errors: error.errors || [],
+            },
+        });
     }
+
 }
+
+
 const allBook = async (req: Request, res: Response) => {
     try {
         let data;
@@ -42,9 +46,9 @@ const allBook = async (req: Request, res: Response) => {
         })
     } catch (error) {
         res.send({
-            "message": "Validation failed",
-            "success": false,
-            "error": error
+            message: "All Data Get Failed",
+            success: false,
+            error: error
         })
     }
 }
