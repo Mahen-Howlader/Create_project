@@ -3,7 +3,7 @@ import { allBook, createBook, deleteBook,  singleBook, updateBook } from "./book
 
 const bookRouter = Router()
 
-bookRouter.post("/book", createBook);
+bookRouter.post("/books", createBook);
 bookRouter.get("/books", allBook);
 bookRouter.get("/books/:bookId", singleBook);
 bookRouter.put("/books/:bookId", updateBook);

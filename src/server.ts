@@ -24,10 +24,6 @@ app.use((req: Request, res: Response) => {
     });
 });
 
-
-
-
-
 async function main() {
     try {
         await mongoose.connect(config.database_url!);

@@ -16,13 +16,9 @@ const createBook = async (req: Request, res: Response) => {
         res.status(500).json({
             message: "Validation failed",
             success: false,
-            error: {
-                name: error.name,
-                errors: error.errors || [],
-            },
+            error : error.message || "Someting went wrong"
         });
     }
-
 }
 
 
